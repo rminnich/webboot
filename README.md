@@ -191,24 +191,25 @@ a bootloader and configure it, four steps are necessary:
 3. mark the first partition as bootable
 4. copy the config file, Linux kernel and initcpio
 
-Now the following commands would need to be run as root:
-
 ```sh
-syslinux -i /dev/sdb1
-dd bs=440 count=1 conv=notrunc if=/usr/lib/syslinux/bios/mbr.bin of=/dev/sdb
-parted /dev/sdb set 1 boot on
+sudo syslinux -i /dev/sdb1
+# There is no consistent name for the mbr.bin file; it can also be in
+# /usr/lib/syslinux/mbr/mbr.bin
+sudo dd bs=440 count=1 conv=notrunc if=/usr/lib/syslinux/bios/mbr.bin of=/dev/sdb
+sudo parted /dev/sdb set 1 boot on
 # mount the stick and copy the files
-mount /dev/sdb1 /mnt/usb
-cp syslinux.cfg.example /mnt/usb/syslinux.cfg
-mkdir /mnt/usb/boot
-cp linux/arch/x86/boot/bzImage /mnt/usb/boot/webboot
-cp /tmp/initramfs.linux_amd64.cpio.gz /mnt/usb/boot/webboot.cpio.gz
+sudo mount /dev/sdb1 /mnt/usb
+sudo cp syslinux.cfg.example /mnt/usb/syslinux.cfg
+sudo mkdir /mnt/usb/boot
+sudo cp linux/arch/x86/boot/bzImage /mnt/usb/boot/webboot
+gzip /tmp/initramfs.linux_amd64.cpio
+sudo cp /tmp/initramfs.linux_amd64.cpio.gz /mnt/usb/boot/webboot.cpio.gz
 ```
 
 Finally, we need to create a `/Images` directory at the root of the usb stick. Note that the "I" in "Images" needs to be capitalized.
 
 ```sh
-mkdir /mnt/usb/Images
+sudo mkdir /mnt/usb/Images
 ```
 
 You should be able to boot from the USB stick now. Depending on your firmware
